@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="StokModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="TKategoriler">
+    <Key>
+      <PropertyRef Name="KategoriId" />
+    </Key>
+    <Property Name="KategoriId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="KategoriAd" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="TMusteriler">
+    <Key>
+      <PropertyRef Name="MusteriId" />
+    </Key>
+    <Property Name="MusteriId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MusteriAd" Type="varchar" MaxLength="50" />
+    <Property Name="MusteriSoyad" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="TSatislar">
+    <Key>
+      <PropertyRef Name="SatısId" />
+    </Key>
+    <Property Name="SatısId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Urun" Type="int" />
+    <Property Name="Musteri" Type="int" />
+    <Property Name="Adet" Type="int" />
+    <Property Name="Fiyat" Type="decimal" Precision="18" Scale="0" />
+  </EntityType>
+  <EntityType Name="TUrunler">
+    <Key>
+      <PropertyRef Name="UrunId" />
+    </Key>
+    <Property Name="UrunId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UrunAd" Type="varchar" MaxLength="50" />
+    <Property Name="Marka" Type="varchar" MaxLength="50" />
+    <Property Name="UrunKategori" Type="int" />
+    <Property Name="Fiyat" Type="decimal" Precision="18" Scale="0" />
+    <Property Name="Stok" Type="int" />
+  </EntityType>
+  <Association Name="FK_TSatislar_TMusteriler">
+    <End Role="TMusteriler" Type="Self.TMusteriler" Multiplicity="0..1" />
+    <End Role="TSatislar" Type="Self.TSatislar" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TMusteriler">
+        <PropertyRef Name="MusteriId" />
+      </Principal>
+      <Dependent Role="TSatislar">
+        <PropertyRef Name="Musteri" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TSatislar_TUrunler">
+    <End Role="TUrunler" Type="Self.TUrunler" Multiplicity="0..1" />
+    <End Role="TSatislar" Type="Self.TSatislar" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TUrunler">
+        <PropertyRef Name="UrunId" />
+      </Principal>
+      <Dependent Role="TSatislar">
+        <PropertyRef Name="Urun" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TUrunler_TKategoriler">
+    <End Role="TKategoriler" Type="Self.TKategoriler" Multiplicity="0..1" />
+    <End Role="TUrunler" Type="Self.TUrunler" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TKategoriler">
+        <PropertyRef Name="KategoriId" />
+      </Principal>
+      <Dependent Role="TUrunler">
+        <PropertyRef Name="UrunKategori" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+  <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <EntityContainer Name="StokModelStoreContainer">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TKategoriler" EntityType="Self.TKategoriler" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TMusteriler" EntityType="Self.TMusteriler" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TSatislar" EntityType="Self.TSatislar" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TUrunler" EntityType="Self.TUrunler" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_TSatislar_TMusteriler" Association="Self.FK_TSatislar_TMusteriler">
+      <End Role="TMusteriler" EntitySet="TMusteriler" />
+      <End Role="TSatislar" EntitySet="TSatislar" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TSatislar_TUrunler" Association="Self.FK_TSatislar_TUrunler">
+      <End Role="TUrunler" EntitySet="TUrunler" />
+      <End Role="TSatislar" EntitySet="TSatislar" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TUrunler_TKategoriler" Association="Self.FK_TUrunler_TKategoriler">
+      <End Role="TKategoriler" EntitySet="TKategoriler" />
+      <End Role="TUrunler" EntitySet="TUrunler" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

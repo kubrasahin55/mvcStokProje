@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="StokModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="TKategoriler">
+    <Key>
+      <PropertyRef Name="KategoriId" />
+    </Key>
+    <Property Name="KategoriId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="KategoriAd" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="TUrunler" Relationship="Self.FK_TUrunler_TKategoriler" FromRole="TKategoriler" ToRole="TUrunler" />
+  </EntityType>
+  <EntityType Name="TMusteriler">
+    <Key>
+      <PropertyRef Name="MusteriId" />
+    </Key>
+    <Property Name="MusteriId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MusteriAd" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="MusteriSoyad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="TSatislar" Relationship="Self.FK_TSatislar_TMusteriler" FromRole="TMusteriler" ToRole="TSatislar" />
+  </EntityType>
+  <EntityType Name="TSatislar">
+    <Key>
+      <PropertyRef Name="SatısId" />
+    </Key>
+    <Property Name="SatısId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Urun" Type="Int32" />
+    <Property Name="Musteri" Type="Int32" />
+    <Property Name="Adet" Type="Int32" />
+    <Property Name="Fiyat" Type="Decimal" Precision="18" Scale="0" />
+    <NavigationProperty Name="TMusteriler" Relationship="Self.FK_TSatislar_TMusteriler" FromRole="TSatislar" ToRole="TMusteriler" />
+    <NavigationProperty Name="TUrunler" Relationship="Self.FK_TSatislar_TUrunler" FromRole="TSatislar" ToRole="TUrunler" />
+  </EntityType>
+  <EntityType Name="TUrunler">
+    <Key>
+      <PropertyRef Name="UrunId" />
+    </Key>
+    <Property Name="UrunId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UrunAd" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Marka" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="UrunKategori" Type="Int32" />
+    <Property Name="Fiyat" Type="Decimal" Precision="18" Scale="0" />
+    <Property Name="Stok" Type="Int32" />
+    <NavigationProperty Name="TKategoriler" Relationship="Self.FK_TUrunler_TKategoriler" FromRole="TUrunler" ToRole="TKategoriler" />
+    <NavigationProperty Name="TSatislar" Relationship="Self.FK_TSatislar_TUrunler" FromRole="TUrunler" ToRole="TSatislar" />
+  </EntityType>
+  <Association Name="FK_TUrunler_TKategoriler">
+    <End Role="TKategoriler" Type="Self.TKategoriler" Multiplicity="0..1" />
+    <End Role="TUrunler" Type="Self.TUrunler" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TKategoriler">
+        <PropertyRef Name="KategoriId" />
+      </Principal>
+      <Dependent Role="TUrunler">
+        <PropertyRef Name="UrunKategori" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TSatislar_TMusteriler">
+    <End Role="TMusteriler" Type="Self.TMusteriler" Multiplicity="0..1" />
+    <End Role="TSatislar" Type="Self.TSatislar" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TMusteriler">
+        <PropertyRef Name="MusteriId" />
+      </Principal>
+      <Dependent Role="TSatislar">
+        <PropertyRef Name="Musteri" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TSatislar_TUrunler">
+    <End Role="TUrunler" Type="Self.TUrunler" Multiplicity="0..1" />
+    <End Role="TSatislar" Type="Self.TSatislar" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TUrunler">
+        <PropertyRef Name="UrunId" />
+      </Principal>
+      <Dependent Role="TSatislar">
+        <PropertyRef Name="Urun" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="StokEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+    <EntitySet Name="TKategoriler" EntityType="Self.TKategoriler" />
+    <EntitySet Name="TMusteriler" EntityType="Self.TMusteriler" />
+    <EntitySet Name="TSatislar" EntityType="Self.TSatislar" />
+    <EntitySet Name="TUrunler" EntityType="Self.TUrunler" />
+    <AssociationSet Name="FK_TUrunler_TKategoriler" Association="Self.FK_TUrunler_TKategoriler">
+      <End Role="TKategoriler" EntitySet="TKategoriler" />
+      <End Role="TUrunler" EntitySet="TUrunler" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TSatislar_TMusteriler" Association="Self.FK_TSatislar_TMusteriler">
+      <End Role="TMusteriler" EntitySet="TMusteriler" />
+      <End Role="TSatislar" EntitySet="TSatislar" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TSatislar_TUrunler" Association="Self.FK_TSatislar_TUrunler">
+      <End Role="TUrunler" EntitySet="TUrunler" />
+      <End Role="TSatislar" EntitySet="TSatislar" />
+    </AssociationSet>
+    <FunctionImport Name="sp_alterdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_creatediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_dropdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(StokModel.sp_helpdiagramdefinition_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(StokModel.sp_helpdiagrams_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_renamediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="new_diagramname" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_upgraddiagrams" />
+  </EntityContainer>
+  <ComplexType Name="sp_helpdiagramdefinition_Result">
+    <Property Type="Int32" Name="version" Nullable="true" />
+    <Property Type="Binary" Name="definition" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagrams_Result">
+    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
+</Schema>
